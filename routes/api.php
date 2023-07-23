@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Course\CourseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Course\Adapters\Http\Controllers\CourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function () {
-    Route::resource('courses', CourseController::class)->except(['create', 'edit']);
+    Route::apiResource('courses', CourseController::class)->except(['create', 'edit']);
 });

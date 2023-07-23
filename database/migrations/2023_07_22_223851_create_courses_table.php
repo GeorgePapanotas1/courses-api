@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Modules\Course\Enums\CourseStatusEnum;
+use Modules\Course\Core\Enums\CourseStatusEnum;
 
 return new class extends Migration
 {
