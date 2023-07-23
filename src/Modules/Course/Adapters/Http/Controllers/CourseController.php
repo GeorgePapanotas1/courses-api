@@ -43,12 +43,12 @@ class CourseController extends Controller
 
             return response()->json([
                 'success' => true,
-                'course_id' => $newCourseId
+                'course_id' => $newCourseId,
             ]);
 
         } catch (InvalidCourseStatus $invalidCourseStatus) {
             return response()->json(['errors' => [
-                'status' => $invalidCourseStatus->getMessage()
+                'status' => $invalidCourseStatus->getMessage(),
             ]], 422);
         }
 
