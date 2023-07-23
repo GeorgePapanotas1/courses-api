@@ -24,11 +24,14 @@ class CourseController extends Controller
      */
     public function index(CourseIndexRequest $request)
     {
-        return CourseResource::collection($this->courseService->getAllCoursesPaginated());
+        $perPage = $request->get('per_page') ?? 10;
+
+        return CourseResource::collection($this->courseService->getAllCoursesPaginated($perPage));
     }
 
     /**
      * Store a newly created resource in storage.
+     * TODO Add validation
      */
     public function store(Request $request)
     {
@@ -56,14 +59,16 @@ class CourseController extends Controller
 
     /**
      * Display the specified resource.
+     * TODO Add validation
      */
     public function show(string $id)
     {
-        //
+        return CourseResource::make($this->courseService->findCourse($id));
     }
 
     /**
      * Update the specified resource in storage.
+     * TODO implement and add validation
      */
     public function update(Request $request, string $id)
     {
@@ -72,6 +77,7 @@ class CourseController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * TODO implement and add validation
      */
     public function destroy(string $id)
     {
