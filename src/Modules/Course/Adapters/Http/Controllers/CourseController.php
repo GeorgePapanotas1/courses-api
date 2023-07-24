@@ -25,8 +25,7 @@ class CourseController extends Controller
 {
     public function __construct(
         private readonly ICourseService $courseService,
-    )
-    {
+    ) {
     }
 
     /**
@@ -36,6 +35,7 @@ class CourseController extends Controller
      *      tags={"Courses"},
      *      summary="Get list of courses",
      *      description="Returns list of courses",
+     *
      *      @OA\Response(
      *          response=200,
      *          description="successful operation"
@@ -58,47 +58,55 @@ class CourseController extends Controller
      *      tags={"Courses"},
      *      summary="Store a new course",
      *      description="Accepts a list of items and stores a course",
-     *     @OA\Parameter(
-     *          name="title",
-     *          description="Course title",
+     *
+     *     @OA\RequestBody(
      *          required=true,
-     *          in="path",
-     *          @OA\Schema(
-     *              type="string",
+     *
+     *          @OA\JsonContent(
+     *              required={"title", "description"},
+     *
+     *              @OA\Property(property="title", type="string"),
+     *              @OA\Property(property="description", type="string"),
+     *              @OA\Property(property="is_premium", type="boolean"),
+     *              @OA\Property(property="status", type="string", enum={"pending", "published"})
      *          )
      *      ),
-     *     @OA\Parameter(
-     *          name="description",
-     *          description="Course Description",
-     *          required=true,
-     *          in="path",
-     *          @OA\Schema(
-     *              type="string",
-     *          )
-     *      ),
-     *     @OA\Parameter(
-     *          name="status",
-     *          description="Course status. Optional. Either pending or published",
-     *          required=false,
-     *          in="path",
-     *          @OA\Schema(
-     *              type="string",
-     *          )
-     *      ),
-     *     @OA\Parameter(
-     *          name="is_premium",
-     *          description="Course is premium, Optional. Either 1 or 0",
-     *          required=false,
-     *          in="path",
-     *          @OA\Schema(
-     *              type="boolean",
-     *          )
-     *      ),
+     *
      *      @OA\Response(
      *          response=200,
-     *          description="successful operation"
-     *       )
-     *     )
+     *          description="Course created successfully",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="success", type="boolean", example="true"),
+     *              @OA\Property(property="course_id", type="int", example=123)
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *              @OA\Property(property="errors", type="object", example={"title": {"The title field is required."}})
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=500,
+     *          description="Server error",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="message", type="string", example="Server error occurred."),
+     *          )
+     *      ),
+     * )
      *
      * Stores a new course
      */
@@ -134,22 +142,31 @@ class CourseController extends Controller
 
     /**
      * @OA\Get(
-     *      path="/courses/{course_id}",
+     *      path="/api/v1/courses/{course_id}",
      *      operationId="show",
      *      tags={"Courses"},
      *      summary="Searches and shows a single course",
      *      description="Searches and shows a single course",
+     *
      *      @OA\Response(
      *          response=200,
      *          description="successful operation"
-     *       )
+     *       ),
+     *     @OA\Response(
+     *          response=422,
+     *          description="The course id is not numeric"
+     *       ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="Course not found."
+     *       ),
      *     )
      *
      * Stores a new course
      */
     public function show(string $id): CourseResource|JsonResponse
     {
-        if (!is_numeric($id)) {
+        if (! is_numeric($id)) {
             return response()->json(['errors' => [
                 'status' => 'Course id field must be numeric',
             ]], 422);
@@ -166,26 +183,77 @@ class CourseController extends Controller
     }
 
     /**
-     * @OA\Put(
-     *      path="/courses/{course_id}",
-     *      operationId="update",
+     * @OA\Patch(
+     *      path="/api/v1/courses/{course_id}",
+     *      operationId="updateCourse",
      *      tags={"Courses"},
-     *      summary="Updates a course",
-     *      description="Updates a course",
+     *      summary="Update a course",
+     *      description="Updates the specified course with the provided data.",
+     *
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="Course ID",
+     *
+     *          @OA\Schema(type="integer")
+     *      ),
+     *
+     *      @OA\RequestBody(
+     *          required=true,
+     *
+     *          @OA\JsonContent(
+     *              required={},
+     *
+     *              @OA\Property(property="title", type="string"),
+     *              @OA\Property(property="description", type="string"),
+     *              @OA\Property(property="is_premium", type="boolean"),
+     *              @OA\Property(property="status", type="string", enum={"pending", "published"})
+     *          )
+     *      ),
+     *
      *      @OA\Response(
      *          response=200,
-     *          description="successful operation"
-     *       )
-     *     )
+     *          description="Course updated successfully",
      *
-     * Stores a new course
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="message", type="string", example="Course updated successfully."),
+     *              @OA\Property(property="course_id", type="string", example=123)
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *              @OA\Property(property="errors", type="object", example={"title": {"The title field is required."}})
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=404,
+     *          description="Course not found",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="message", type="string", example="Course not found."),
+     *          )
+     *      ),
+     * )
      */
     public function update(CourseUpdateRequest $request, string $id): JsonResponse
     {
         try {
 
             $course = new Course(
-                id: $id,
+                id: intval($id),
                 title: $request->get('title'),
                 description: $request->get('description'),
                 status: CourseStatusEnum::fromOrThrow($request->get('status')),
@@ -212,22 +280,70 @@ class CourseController extends Controller
 
     /**
      * @OA\Delete(
-     *      path="/courses/{course_id}",
-     *      operationId="delete",
+     *      path="/api/v1/courses/{course_id}",
+     *      operationId="deleteCourse",
      *      tags={"Courses"},
-     *      summary="Deletes a course",
-     *      description="Deletes a course",
+     *      summary="Delete a course",
+     *      description="Deletes the specified course.",
+     *
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="Course ID",
+     *
+     *          @OA\Schema(type="integer")
+     *      ),
+     *
      *      @OA\Response(
      *          response=200,
-     *          description="successful operation"
-     *       )
-     *     )
+     *          description="Course deleted successfully",
      *
-     * Stores a new course
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="success", type="boolean", example="true")
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=404,
+     *          description="Course not found",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="message", type="string", example="Course not found.")
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="errors", type="object", example={"status": {"Course id field must be numeric"}})
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=500,
+     *          description="Server error",
+     *
+     *          @OA\JsonContent(
+     *              type="object",
+     *
+     *              @OA\Property(property="message", type="string", example="Server error occurred.")
+     *          )
+     *      ),
+     *      security={ {"bearer": {} } }
+     * )
      */
     public function destroy(string $id): JsonResponse
     {
-        if (!is_numeric($id)) {
+        if (! is_numeric($id)) {
             return response()->json(['errors' => [
                 'status' => 'Course id field must be numeric',
             ]], 422);
