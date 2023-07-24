@@ -25,6 +25,6 @@ enum CourseStatusEnum: string
 
     public static function toString(): string
     {
-        return implode(', ', array_column(self::cases(), 'value'));
+        return implode(',', array_column(self::cases(), 'value'));
     }
 }

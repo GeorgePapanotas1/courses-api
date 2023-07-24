@@ -10,7 +10,7 @@ use Modules\Course\Core\Enums\CourseStatusEnum;
 
 class Course extends Model
 {
-    //    use HasFactory;
+    use HasFactory;
 
     protected $guarded = ['id'];
 
