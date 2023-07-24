@@ -12,15 +12,19 @@ enum CourseStatusEnum: string
     /**
      * @throws InvalidCourseStatus
      */
-    public static function fromOrThrow(
-        string $value): self
+    public static function fromOrThrow(string $value): self
     {
         $status = self::tryFrom($value);
 
         if (! $status) {
-            throw new InvalidCourseStatus('Invalid course status.');
+            throw new InvalidCourseStatus('Invalid course status. Available statuses: '.self::toString());
         }
 
         return $status;
+    }
+
+    public static function toString(): string
+    {
+        return implode(', ', array_column(self::cases(), 'value'));
     }
 }

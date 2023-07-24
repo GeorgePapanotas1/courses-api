@@ -5,6 +5,7 @@ namespace Modules\Course\Core\Services\Providers;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Course\Core\DataTransferObjects\CourseDataTransferObject;
 use Modules\Course\Core\Domain\Course;
+use Modules\Course\Core\Exceptions\CourseNotCreatedException;
 use Modules\Course\Core\Repositories\Contracts\ICourseRepository;
 use Modules\Course\Core\Services\Contracts\ICourseService;
 
@@ -30,6 +31,9 @@ class CourseService implements ICourseService
         return $this->courseRepository->find($courseId);
     }
 
+    /**
+     * @throws CourseNotCreatedException
+     */
     public function createCourse(CourseDataTransferObject $course): int
     {
         return $this->courseRepository->create($course);

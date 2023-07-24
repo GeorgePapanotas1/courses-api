@@ -5,6 +5,7 @@ namespace Modules\Course\Core\Services\Contracts;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Course\Core\DataTransferObjects\CourseDataTransferObject;
 use Modules\Course\Core\Domain\Course;
+use Modules\Course\Core\Exceptions\CourseNotCreatedException;
 
 interface ICourseService
 {
@@ -14,6 +15,9 @@ interface ICourseService
 
     public function findCourse(int $courseId): Course;
 
+    /**
+     * @throws CourseNotCreatedException
+     */
     public function createCourse(CourseDataTransferObject $course): int;
 
     public function updateCourse(Course $course): bool;

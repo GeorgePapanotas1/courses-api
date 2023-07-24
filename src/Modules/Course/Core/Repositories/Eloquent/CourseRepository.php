@@ -2,9 +2,11 @@
 
 namespace Modules\Course\Core\Repositories\Eloquent;
 
+use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Course\Core\DataTransferObjects\CourseDataTransferObject;
 use Modules\Course\Core\Domain\Course as CourseEntity;
+use Modules\Course\Core\Exceptions\CourseNotCreatedException;
 use Modules\Course\Core\Models\Course;
 use Modules\Course\Core\Repositories\Contracts\ICourseRepository;
 
@@ -34,14 +36,22 @@ class CourseRepository implements ICourseRepository
         return Course::findOrFail($id)->toCourseEntity();
     }
 
+    /**
+     * @throws CourseNotCreatedException
+     */
     public function create(CourseDataTransferObject $course): int
     {
-        return Course::create([
-            'title' => $course->getTitle(),
-            'description' => $course->getDescription(),
-            'status' => $course->getStatus()->value,
-            'is_premium' => $course->isPremium(),
-        ])->id;
+        try {
+            return Course::create([
+                'title' => $course->getTitle(),
+                'description' => $course->getDescription(),
+                'status' => $course->getStatus()->value,
+                'is_premium' => $course->isPremium(),
+            ])->id;
+        } catch (Exception $e) {
+            throw new CourseNotCreatedException($e->getMessage());
+        }
+
     }
 
     public function update(CourseEntity $course): bool

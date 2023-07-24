@@ -16,9 +16,9 @@ class Course
 
         private bool $isPremium,
 
-        private ?Carbon $createdAt,
+        private ?Carbon $createdAt = null,
 
-        private ?Carbon $updatedAt,
+        private ?Carbon $updatedAt = null,
     ) {
     }
 
