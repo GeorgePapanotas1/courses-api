@@ -17,15 +17,18 @@ use Modules\Course\Core\Enums\CourseStatusEnum;
 use Modules\Course\Core\Exceptions\CourseNotCreatedException;
 use Modules\Course\Core\Exceptions\InvalidCourseStatus;
 use Modules\Course\Core\Services\Contracts\ICourseService;
+use Modules\Course\Core\Services\Decorators\CourseNotificationDecorator;
 
 /**
  * @OA\Info(title="Courses CRUD API", version="1.0")
  */
 class CourseController extends Controller
 {
+    private readonly ICourseService $courseService;
     public function __construct(
-        private readonly ICourseService $courseService,
+        ICourseService $courseService,
     ) {
+        $this->courseService = new CourseNotificationDecorator($courseService);
     }
 
     /**
