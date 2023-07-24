@@ -18,15 +18,31 @@ use Modules\Course\Core\Exceptions\CourseNotCreatedException;
 use Modules\Course\Core\Exceptions\InvalidCourseStatus;
 use Modules\Course\Core\Services\Contracts\ICourseService;
 
+/**
+ * @OA\Info(title="Courses CRUD API", version="1.0")
+ */
 class CourseController extends Controller
 {
     public function __construct(
         private readonly ICourseService $courseService,
-    ) {
+    )
+    {
     }
 
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *      path="/api/v1/courses",
+     *      operationId="index",
+     *      tags={"Courses"},
+     *      summary="Get list of courses",
+     *      description="Returns list of courses",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation"
+     *       )
+     *     )
+     *
+     * Returns list of Courses
      */
     public function index(CourseIndexRequest $request): AnonymousResourceCollection
     {
@@ -36,7 +52,55 @@ class CourseController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *      path="/api/v1/courses",
+     *      operationId="store",
+     *      tags={"Courses"},
+     *      summary="Store a new course",
+     *      description="Accepts a list of items and stores a course",
+     *     @OA\Parameter(
+     *          name="title",
+     *          description="Course title",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="string",
+     *          )
+     *      ),
+     *     @OA\Parameter(
+     *          name="description",
+     *          description="Course Description",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="string",
+     *          )
+     *      ),
+     *     @OA\Parameter(
+     *          name="status",
+     *          description="Course status. Optional. Either pending or published",
+     *          required=false,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="string",
+     *          )
+     *      ),
+     *     @OA\Parameter(
+     *          name="is_premium",
+     *          description="Course is premium, Optional. Either 1 or 0",
+     *          required=false,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="boolean",
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation"
+     *       )
+     *     )
+     *
+     * Stores a new course
      */
     public function store(CourseCreationRequest $request): JsonResponse
     {
@@ -69,11 +133,23 @@ class CourseController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *      path="/courses/{course_id}",
+     *      operationId="show",
+     *      tags={"Courses"},
+     *      summary="Searches and shows a single course",
+     *      description="Searches and shows a single course",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation"
+     *       )
+     *     )
+     *
+     * Stores a new course
      */
     public function show(string $id): CourseResource|JsonResponse
     {
-        if (! is_numeric($id)) {
+        if (!is_numeric($id)) {
             return response()->json(['errors' => [
                 'status' => 'Course id field must be numeric',
             ]], 422);
@@ -90,7 +166,19 @@ class CourseController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *      path="/courses/{course_id}",
+     *      operationId="update",
+     *      tags={"Courses"},
+     *      summary="Updates a course",
+     *      description="Updates a course",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation"
+     *       )
+     *     )
+     *
+     * Stores a new course
      */
     public function update(CourseUpdateRequest $request, string $id): JsonResponse
     {
@@ -123,11 +211,23 @@ class CourseController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *      path="/courses/{course_id}",
+     *      operationId="delete",
+     *      tags={"Courses"},
+     *      summary="Deletes a course",
+     *      description="Deletes a course",
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation"
+     *       )
+     *     )
+     *
+     * Stores a new course
      */
     public function destroy(string $id): JsonResponse
     {
-        if (! is_numeric($id)) {
+        if (!is_numeric($id)) {
             return response()->json(['errors' => [
                 'status' => 'Course id field must be numeric',
             ]], 422);
