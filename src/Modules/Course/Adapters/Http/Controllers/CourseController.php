@@ -25,6 +25,7 @@ use Modules\Course\Core\Services\Decorators\CourseNotificationDecorator;
 class CourseController extends Controller
 {
     private readonly ICourseService $courseService;
+
     public function __construct(
         ICourseService $courseService,
     ) {

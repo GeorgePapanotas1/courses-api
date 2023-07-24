@@ -12,7 +12,6 @@ use Modules\Course\Core\Services\Contracts\ICourseService;
  */
 class CourseServiceDecorator implements ICourseService
 {
-
     public function __construct(
         private readonly ICourseService $decoratedCourseService)
     {

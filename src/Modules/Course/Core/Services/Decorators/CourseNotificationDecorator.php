@@ -11,25 +11,27 @@ use Modules\Course\Core\Domain\Course;
  */
 class CourseNotificationDecorator extends CourseServiceDecorator
 {
-
     public function createCourse(CourseDataTransferObject $course): int
     {
         $value = parent::createCourse($course);
-        Log::info("Course created. Notifying admins");
+        Log::info('Course created. Notifying admins');
+
         return $value;
     }
 
     public function updateCourse(Course $course): bool
     {
         $value = parent::updateCourse($course);
-        Log::info("Course updated. Notifying admins");
+        Log::info('Course updated. Notifying admins');
+
         return $value;
     }
 
     public function deleteCourse(int $courseId): bool
     {
         $value = parent::deleteCourse($courseId);
-        Log::info("Course deleted. Notifying admins");
+        Log::info('Course deleted. Notifying admins');
+
         return $value;
     }
 }
