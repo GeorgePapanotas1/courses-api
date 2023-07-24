@@ -29,6 +29,10 @@ class CourseController extends Controller
     public function __construct(
         ICourseService $courseService,
     ) {
+        /*
+         * This is out of scope. I experimented with decorators.
+         * The normal controller would property promote the ICourseService directly without the Decorator.
+         */
         $this->courseService = new CourseNotificationDecorator($courseService);
     }
 
