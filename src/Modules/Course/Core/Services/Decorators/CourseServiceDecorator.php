@@ -8,7 +8,7 @@ use Modules\Course\Core\Domain\Course;
 use Modules\Course\Core\Services\Contracts\ICourseService;
 
 /*
- * This is out of scope. Experimenting with decorators.
+ * This is out of scope.
  */
 class CourseServiceDecorator implements ICourseService
 {

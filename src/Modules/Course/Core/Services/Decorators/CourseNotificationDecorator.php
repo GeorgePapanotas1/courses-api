@@ -7,7 +7,7 @@ use Modules\Course\Core\DataTransferObjects\CourseDataTransferObject;
 use Modules\Course\Core\Domain\Course;
 
 /*
- * This is out of scope. Experimenting with decorators.
+ * This is out of scope.
  */
 class CourseNotificationDecorator extends CourseServiceDecorator
 {

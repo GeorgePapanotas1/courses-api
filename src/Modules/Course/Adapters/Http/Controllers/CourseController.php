@@ -30,7 +30,7 @@ class CourseController extends Controller
         ICourseService $courseService,
     ) {
         /*
-         * This is out of scope. I experimented with decorators.
+         * This is out of scope.
          * The normal controller would property promote the ICourseService directly without the Decorator.
          */
         $this->courseService = new CourseNotificationDecorator($courseService);
